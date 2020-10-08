@@ -1,6 +1,10 @@
 package com.example.recipe.recipeapp.controller;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,13 +22,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.example.recipe.recipeapp.domain.Recipe;
 import com.example.recipe.recipeapp.service.RecipeService;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
 
 class RecipeControllerTest {
 	@Mock
@@ -69,4 +66,13 @@ class RecipeControllerTest {
 			.andExpect(jsonPath("$.id", equalTo("5f6761125f55f6327447df3c")));
 	}
 
+	@Test
+	void testCustomizedResponseEntityExceptionHandler() throws Exception {
+		String failureMessage = "Mocking the failure";
+		Mockito.when(recipeService.findById(Mockito.anyString())).thenThrow(new IllegalArgumentException(failureMessage));
+		mockMvc.perform(get("/api/v1/recipe/{id}", "5f6761125f55f6327447df3c")
+			.contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isInternalServerError())
+			.andExpect(jsonPath("$.message", equalTo(failureMessage)));
+	}
 }
