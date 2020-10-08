@@ -20,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import com.example.recipe.recipeapp.controller.exceptions.CustomizedResponseEntityExceptionHandler;
 import com.example.recipe.recipeapp.domain.Recipe;
 import com.example.recipe.recipeapp.service.RecipeService;
 
@@ -35,7 +36,10 @@ class RecipeControllerTest {
 	@BeforeEach
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
+		mockMvc = MockMvcBuilders
+				.standaloneSetup(recipeController)
+				.setControllerAdvice(new CustomizedResponseEntityExceptionHandler())
+				.build();
 	}
 
 	@Test
