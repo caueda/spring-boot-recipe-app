@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -77,6 +78,15 @@ class RecipeControllerTest extends AbstractRestControllerTest {
 			.contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.id", equalTo(RECIPE_ID)));
+	}
+	
+	@Test
+	void testFindById_WhenRecipeNotFound() throws Exception {
+		Mockito.when(recipeService.findById(Mockito.anyString())).thenThrow(new NoSuchElementException("No value present"));
+		mockMvc.perform(get(API_V1_RECIPES + "/{id}", RECIPE_ID)
+			.contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isNotFound())
+			.andExpect(jsonPath("$.message", equalTo("No value present")));
 	}
 
 	@Test
