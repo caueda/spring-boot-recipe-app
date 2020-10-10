@@ -18,6 +18,7 @@ import com.example.recipe.recipeapp.domain.Recipe;
 import com.example.recipe.recipeapp.repository.RecipeRepository;
 
 class RecipeServiceImplTest {
+	private static final String ID = "5f6761125f55f6327447df3c";
 	
 	@Mock
 	RecipeRepository recipeRepository;
@@ -48,4 +49,18 @@ class RecipeServiceImplTest {
 		assertThat(true, is(recipeService.findById("").isPresent()));
 	}
 
+	@Test
+	public void testInsert() {
+		Mockito.when(recipeRepository.insert(Mockito.any(Recipe.class)))
+		.thenReturn(Recipe.builder().id("5f6761125f55f6327447df3c").build());
+		assertThat(ID, equalTo(recipeService.insert(new Recipe()).getId()));
+	}
+	
+	@Test
+	public void testSave() {
+		Recipe recipe = Recipe.builder().id(ID).build();
+		Mockito.when(recipeRepository.save(Mockito.any(Recipe.class)))
+		.thenReturn(recipe);
+		assertThat(ID, equalTo(recipeService.save(recipe).getId()));
+	}
 }

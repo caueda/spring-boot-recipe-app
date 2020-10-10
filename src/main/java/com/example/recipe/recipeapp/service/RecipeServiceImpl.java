@@ -27,4 +27,19 @@ public class RecipeServiceImpl implements RecipeService {
 		
 		return recipeRepository.findById(id);
 	}
+	
+	@Override
+	public Recipe insert(Recipe recipe) {
+		return recipeRepository.insert(recipe);
+	}
+	
+	@Override
+	public Recipe save(Recipe recipe) {
+		return recipeRepository.save(recipe);
+	}
+	
+	@Override
+	public void delete(String id) {
+		recipeRepository.deleteById(id);
+	}
 }

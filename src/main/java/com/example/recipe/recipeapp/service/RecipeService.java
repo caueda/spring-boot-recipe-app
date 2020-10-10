@@ -10,5 +10,10 @@ public interface RecipeService {
 	List<Recipe> findAll();
 	
 	Optional<Recipe> findById(String id);
-
+	
+	Recipe insert(Recipe recipe);
+	
+	Recipe save(Recipe recipe);
+	
+	void delete(String id);
 }
