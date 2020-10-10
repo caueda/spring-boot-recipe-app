@@ -14,7 +14,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestController
 public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExceptionHandler{
 
-		@ExceptionHandler(Exception.class)
+		@ExceptionHandler(RuntimeException.class)
 		public final ResponseEntity<Object> handleAllException(Exception ex, WebRequest webRequest) {
 			ExceptionResponse exceptionResponse =
 					ExceptionResponse.builder()
