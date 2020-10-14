@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,7 @@ import com.example.recipe.recipeapp.service.RecipeService;
 import io.swagger.annotations.ApiOperation;
 
 @Controller
+@CrossOrigin(origins = "*", allowedHeaders = {"*"}, exposedHeaders = {"Location"})
 @RequestMapping("/api/v1/recipes")
 public class RecipeController {
 	private RecipeService recipeService;
@@ -49,10 +51,20 @@ public class RecipeController {
         return ResponseEntity.created(location).build();
     }
 	
-	@PutMapping
-    public ResponseEntity<Object> updateRecipe(@RequestBody Recipe recipe){
+	@PutMapping("/all")
+    public ResponseEntity<Object> putAllRecipes(@RequestBody Recipe[] recipes){
         try {
-			recipeService.save(recipe);
+        	recipeService.saveAll(recipes);
+		} catch (Exception e) {
+			return new ResponseEntity<Object>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+		return ResponseEntity.ok().build();
+    }
+	
+	@PutMapping()
+    public ResponseEntity<Object> putRecipes(@RequestBody Recipe recipe){
+        try {
+        	recipeService.save(recipe);
 		} catch (Exception e) {
 			return new ResponseEntity<Object>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
@@ -60,7 +72,7 @@ public class RecipeController {
     }
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Object> updateRecipe(@PathVariable String id) {
+	public ResponseEntity<Object> deleteRecipe(@PathVariable String id) {
 		try {
 			recipeService.delete(id);
 		} catch(Exception e) {

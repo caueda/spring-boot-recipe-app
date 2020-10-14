@@ -121,9 +121,9 @@ class RecipeControllerTest extends AbstractRestControllerTest {
 				.name("Burguer")
 				.description("Best burguer ever")
 				.build();
-		mockMvc.perform(put(API_V1_RECIPES)
+		mockMvc.perform(put(API_V1_RECIPES + "/all")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(recipe)))
+                .content(asJsonString(new Recipe[] {recipe})))
 			.andExpect(status().isOk());
 	}
 	
@@ -133,18 +133,17 @@ class RecipeControllerTest extends AbstractRestControllerTest {
 				.name("Burguer")
 				.description("Best burguer ever")
 				.build();
-		Mockito.when(recipeService.save(Mockito.any(Recipe.class)))
+		Mockito.when(recipeService.saveAll(Mockito.any(Recipe[].class)))
 			.thenThrow(new IllegalArgumentException("bad request"));
-		mockMvc.perform(put(API_V1_RECIPES)
+		mockMvc.perform(put(API_V1_RECIPES + "/all")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(recipe)))
-			.andExpect(jsonPath("$", equalTo("bad request")))
 			.andExpect(status().is(HttpStatus.BAD_REQUEST.value()));
 	}
 	
 	@Test
 	void testDeleteRecipe() throws Exception {
-		Mockito.when(recipeService.save(Mockito.any(Recipe.class)))
+		Mockito.when(recipeService.saveAll(Mockito.any(Recipe[].class)))
 			.thenThrow(new IllegalArgumentException("bad request"));
 		mockMvc.perform(delete(API_V1_RECIPES + "/{id}", RECIPE_ID))
 			.andExpect(status().isOk());

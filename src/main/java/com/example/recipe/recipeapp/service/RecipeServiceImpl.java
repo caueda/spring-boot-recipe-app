@@ -1,5 +1,6 @@
 package com.example.recipe.recipeapp.service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +32,12 @@ public class RecipeServiceImpl implements RecipeService {
 	@Override
 	public Recipe insert(Recipe recipe) {
 		return recipeRepository.insert(recipe);
+	}
+	
+	@Override
+	public Recipe[] saveAll(Recipe[] recipes) {
+		List<Recipe> saved = recipeRepository.saveAll(Arrays.asList(recipes));
+		return saved.toArray(new Recipe[saved.size()]);
 	}
 	
 	@Override
