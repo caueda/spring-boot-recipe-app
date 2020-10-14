@@ -7,6 +7,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,6 +56,15 @@ class RecipeServiceImplTest {
 		Mockito.when(recipeRepository.insert(Mockito.any(Recipe.class)))
 		.thenReturn(Recipe.builder().id("5f6761125f55f6327447df3c").build());
 		assertThat(ID, equalTo(recipeService.insert(new Recipe()).getId()));
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testSaveAll() {
+		Recipe recipe = Recipe.builder().id(ID).build();
+		Mockito.when(recipeRepository.saveAll(Mockito.any(List.class)))
+		.thenReturn(Stream.of(recipe).collect(Collectors.toList()));
+		assertThat(ID, equalTo(recipeService.saveAll(new Recipe[] {recipe})[0].getId()));
 	}
 	
 	@Test
