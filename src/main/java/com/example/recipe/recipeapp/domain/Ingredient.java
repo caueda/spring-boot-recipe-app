@@ -1,5 +1,7 @@
 package com.example.recipe.recipeapp.domain;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,7 +9,7 @@ import lombok.Setter;
 
 @NoArgsConstructor
 @Getter @Setter
-public class Ingredient {
+public class Ingredient extends RepresentationModel<Ingredient>{
 	private String name;
 	private Integer amount;
 	
