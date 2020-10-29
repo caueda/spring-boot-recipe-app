@@ -19,6 +19,8 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 		public final ResponseEntity<Object> handleAllException(Exception ex, WebRequest webRequest) {
 			ExceptionResponse exceptionResponse =
 					ExceptionResponse.builder()
+						.status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+						.error(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
 						.timestamp(new Date())
 						.message(ex.getMessage())
 						.detail(webRequest.getDescription(false))
@@ -30,10 +32,13 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 		public final ResponseEntity<Object> handleNoSuchElementException(Exception ex, WebRequest webRequest) {
 			ExceptionResponse exceptionResponse =
 					ExceptionResponse.builder()
+						.status(HttpStatus.NOT_FOUND.value())
+						.error(HttpStatus.NOT_FOUND.getReasonPhrase())
 						.timestamp(new Date())
 						.message(ex.getMessage())
 						.detail(webRequest.getDescription(false))
 						.build();
+			webRequest.getHeader("status");
 			return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
 		}
 }

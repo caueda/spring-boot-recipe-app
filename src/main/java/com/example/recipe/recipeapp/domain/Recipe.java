@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.hateoas.RepresentationModel;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
@@ -15,7 +16,7 @@ import lombok.Setter;
 @Document(collection = "recipe")
 @NoArgsConstructor
 @Getter @Setter
-public class Recipe {
+public class Recipe extends RepresentationModel<Recipe>{
 	@ApiModelProperty(value = "The identification of the recipe")
 	@Id
 	private String id;
