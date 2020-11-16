@@ -53,7 +53,6 @@ public class RecipeController {
 		recipe.add(withSelfRel);
 		return new ResponseEntity<Recipe>(recipe, HttpStatus.OK);
 	}
-	
 	@PostMapping
     public ResponseEntity<Object> createNewRecipe(@RequestBody Recipe recipe){
 		Recipe recipeCreated = recipeService.insert(recipe);
