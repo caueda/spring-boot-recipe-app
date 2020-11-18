@@ -1,10 +1,10 @@
-package com.example.recipe.recipeapp.domain;
+package com.example.recipe.recipeapp.dto;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.hateoas.RepresentationModel;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
@@ -12,10 +12,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Document(collection = "recipe")
 @NoArgsConstructor
 @Getter @Setter
-public class Recipe {
+public class RecipeDTO extends RepresentationModel<RecipeDTO>{
 	@ApiModelProperty(value = "The identification of the recipe")
 	@Id
 	private String id;
@@ -26,10 +25,10 @@ public class Recipe {
 	@ApiModelProperty(value = "The url for the recipe image")
 	private String imagePath;
 	@ApiModelProperty(value = "Ingredients list")
-	private List<Ingredient> ingredients = new ArrayList<>();
+	private List<IngredientDTO> ingredients = new ArrayList<>();
 	
 	@Builder
-	public Recipe(String id, String name, String description, String imagePath, List<Ingredient> ingredients) {
+	public RecipeDTO(String id, String name, String description, String imagePath, List<IngredientDTO> ingredients) {
 		super();
 		this.id = id;
 		this.name = name;

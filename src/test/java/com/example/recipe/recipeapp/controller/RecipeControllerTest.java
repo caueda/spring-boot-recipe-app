@@ -21,6 +21,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -29,6 +30,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.example.recipe.recipeapp.controller.exceptions.CustomizedResponseEntityExceptionHandler;
 import com.example.recipe.recipeapp.domain.Recipe;
 import com.example.recipe.recipeapp.service.RecipeService;
+import com.example.recipe.recipeapp.v1.mapper.RecipeMapper;
 
 class RecipeControllerTest extends AbstractRestControllerTest {
 	private static final String API_V1_RECIPES = "/api/v1/recipes";
@@ -37,6 +39,9 @@ class RecipeControllerTest extends AbstractRestControllerTest {
 
 	@Mock
 	RecipeService recipeService;
+	
+	@Spy
+	RecipeMapper recipeMapper = RecipeMapper.INSTANCE;
 	
 	@InjectMocks
 	RecipeController recipeController;
@@ -143,17 +148,26 @@ class RecipeControllerTest extends AbstractRestControllerTest {
 	
 	@Test
 	void testDeleteRecipe() throws Exception {
-		Mockito.when(recipeService.saveAll(Mockito.any(Recipe[].class)))
-			.thenThrow(new IllegalArgumentException("bad request"));
+		Recipe recipe = new Recipe();
+		recipe.setId("adfa");
+		recipe.setName("Bread");
+		recipe.setDescription("Brazilian bread");
+		Mockito.when(recipeService.findById(Mockito.anyString()))
+			.thenReturn(Optional.of(recipe));
 		mockMvc.perform(delete(API_V1_RECIPES + "/{id}", RECIPE_ID))
 			.andExpect(status().isOk());
 	}
 	
 	@Test
 	void testDeleteRecipe_WhenInternalError_happens() throws Exception {
-		Mockito.doThrow(new IllegalArgumentException("delete error")).when(recipeService).delete(Mockito.anyString());
+		Recipe recipe = new Recipe();
+		recipe.setId("adfa");
+		recipe.setName("Bread");
+		recipe.setDescription("Brazilian bread");
+		Mockito.when(recipeService.findById(Mockito.anyString()))
+			.thenReturn(Optional.of(recipe));
+		Mockito.doThrow(new RuntimeException("delete error")).when(recipeService).delete(Mockito.anyString());
 		mockMvc.perform(delete(API_V1_RECIPES + "/{id}", RECIPE_ID))
-			.andExpect(jsonPath("$", equalTo("delete error")))
-			.andExpect(status().is(HttpStatus.BAD_REQUEST.value()));
+			.andExpect(status().is(HttpStatus.INTERNAL_SERVER_ERROR.value()));
 	}
 }
